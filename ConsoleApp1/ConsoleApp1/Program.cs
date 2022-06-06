@@ -159,6 +159,7 @@ namespace ConsoleApp1
         {
             int maxHealth = 200;
             int firstThird = 3;
+            int healthAmplifier = 50;
 
             if (Health < maxHealth)
             {
@@ -167,7 +168,7 @@ namespace ConsoleApp1
                 if (randomChance < firstThird)
                 {
                     Console.WriteLine("Клирик исцелил себя");
-                    Health += 50;
+                    Health += healthAmplifier;
                 }
             }
         }
@@ -184,22 +185,23 @@ namespace ConsoleApp1
         {
             int randomChance = GetRandom();
             int half = 5;
+            int amplifier = 50;
 
             if (randomChance < half)
             {
                 Console.WriteLine("Паладин получил баф ХП");
-                Health += 25;
+                Health += amplifier;
             }
             else if (randomChance == half)
             {
                 Console.WriteLine("Паладин получил баф урона и ХП");
-                Health += 50;
-                Damage += 50;
+                Health += amplifier;
+                Damage += amplifier;
             }
             else
             {
                 Console.WriteLine("Паладин получил баф урона");
-                Damage += 50;
+                Damage += amplifier;
             }
         }
     }
