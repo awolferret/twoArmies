@@ -54,6 +54,7 @@ namespace ConsoleApp1
             }
             CheckWin(firstWarriors, secondWarriors);
         }
+
         private void AddToList(List<Warrior> list)
         {
             list.Add(new Rogue("Rogue", 100, 50, 10));
