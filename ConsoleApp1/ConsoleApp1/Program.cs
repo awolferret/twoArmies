@@ -9,7 +9,7 @@ namespace ConsoleApp1
         static void Main()
         {
             Warrior warrior = new Warrior("Default", 1, 1, 1);
-            warrior.Finghting();
+            warrior.Finght();
         }
     }
 
@@ -28,26 +28,26 @@ namespace ConsoleApp1
             Armor = armor;
         }
 
-        public void Finghting()
+        public void Finght()
         {
-            List<Warrior> FirstWarriors = new List<Warrior>();
-            AddToList(FirstWarriors);
-            List<Warrior> SecondWarriors = new List<Warrior>();
-            AddToList(SecondWarriors);
+            List<Warrior> firstWarriors = new List<Warrior>();
+            AddToList(firstWarriors);
+            List<Warrior> secondWarriors = new List<Warrior>();
+            AddToList(secondWarriors);
             Random random = new Random();
 
-            for (int i = 0; i < FirstWarriors.Count; i++)
+            for (int i = 0; i < firstWarriors.Count; i++)
             {
                 Console.Write(i + 1 + " ");
-                FirstWarriors[i].ShowInfo();
+                firstWarriors[i].ShowInfo();
             }
 
-            while (FirstWarriors.Count > 0 && SecondWarriors.Count > 0)
+            while (firstWarriors.Count > 0 && secondWarriors.Count > 0)
             {
-                int firstIndex = random.Next(1, FirstWarriors.Count);
-                Warrior firstFighter = FirstWarriors[firstIndex-1];
-                int secondIndex = random.Next(1, SecondWarriors.Count);
-                Warrior secondFighter = SecondWarriors[secondIndex-1];
+                int firstIndex = random.Next(1, firstWarriors.Count);
+                Warrior firstFighter = firstWarriors[firstIndex-1];
+                int secondIndex = random.Next(1, secondWarriors.Count);
+                Warrior secondFighter = secondWarriors[secondIndex-1];
 
                 while (firstFighter.Health > 0 && secondFighter.Health > 0)
                 {
@@ -59,11 +59,11 @@ namespace ConsoleApp1
                     secondFighter.TakeDamage(firstFighter.Damage, ref firstFighter.Health);
                     firstFighter.ShowInfo();
                     secondFighter.ShowInfo();
-                    CheckDeath(FirstWarriors, firstIndex, firstFighter.Health);
-                    CheckDeath(SecondWarriors, secondIndex, secondFighter.Health);
+                    CheckDeath(firstWarriors, firstIndex, firstFighter.Health);
+                    CheckDeath(secondWarriors, secondIndex, secondFighter.Health);
                 }
             }
-            CheckWin(FirstWarriors, SecondWarriors);
+            CheckWin(firstWarriors, secondWarriors);
         }
 
         private void AddToList(List<Warrior> list)
