@@ -9,7 +9,7 @@ namespace ConsoleApp1
         static void Main()
         {
             Warrior warrior = new Warrior("Default", 1, 1, 1);
-            warrior.Finght();
+            warrior.Fight();
         }
     }
 
@@ -28,7 +28,7 @@ namespace ConsoleApp1
             Armor = armor;
         }
 
-        public void Finght()
+        public void Fight()
         {
             List<Warrior> firstWarriors = new List<Warrior>();
             AddToList(firstWarriors);
