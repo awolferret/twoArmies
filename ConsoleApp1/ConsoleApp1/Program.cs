@@ -8,25 +8,14 @@ namespace ConsoleApp1
     {
         static void Main()
         {
-            Warrior warrior = new Warrior("Default", 1, 1, 1);
-            warrior.Fight();
+            BattleField battleField = new BattleField();
+            battleField.Fight();
         }
     }
 
-    class Warrior
+    class BattleField
     {
-        protected string Name;
-        protected int Health;
-        protected int Damage;
-        protected int Armor;
-
-        public Warrior(string name, int health, int damage, int armor)
-        {
-            Name = name;
-            Health = health;
-            Damage = damage;
-            Armor = armor;
-        }
+        Warrior warrior = new Warrior("Default", 1, 1, 1);
 
         public void Fight()
         {
@@ -45,27 +34,26 @@ namespace ConsoleApp1
             while (firstWarriors.Count > 0 && secondWarriors.Count > 0)
             {
                 int firstIndex = random.Next(1, firstWarriors.Count);
-                Warrior firstFighter = firstWarriors[firstIndex-1];
+                Warrior firstFighter = firstWarriors[firstIndex - 1];
                 int secondIndex = random.Next(1, secondWarriors.Count);
-                Warrior secondFighter = secondWarriors[secondIndex-1];
+                Warrior secondFighter = secondWarriors[secondIndex - 1];
 
                 while (firstFighter.Health > 0 && secondFighter.Health > 0)
                 {
                     firstFighter.GetRandom();
                     firstFighter.UseAbility();
-                    firstFighter.TakeDamage(secondFighter.Damage, ref secondFighter.Health);
+                    firstFighter.TakeDamage(secondFighter.Damage);
                     secondFighter.GetRandom();
                     secondFighter.UseAbility();
-                    secondFighter.TakeDamage(firstFighter.Damage, ref firstFighter.Health);
+                    secondFighter.TakeDamage(firstFighter.Damage);
                     firstFighter.ShowInfo();
                     secondFighter.ShowInfo();
-                    CheckDeath(firstWarriors, firstIndex, firstFighter.Health);
-                    CheckDeath(secondWarriors, secondIndex, secondFighter.Health);
+                    warrior.CheckDeath(firstWarriors, firstIndex, firstFighter.Health);
+                    warrior.CheckDeath(secondWarriors, secondIndex, secondFighter.Health);
                 }
             }
             CheckWin(firstWarriors, secondWarriors);
         }
-
         private void AddToList(List<Warrior> list)
         {
             list.Add(new Rogue("Rogue", 100, 50, 10));
@@ -73,34 +61,6 @@ namespace ConsoleApp1
             list.Add(new Paladin("Paladin", 150, 45, 25));
             list.Add(new Ninja("Ninja", 80, 55, 5));
             list.Add(new Huntsman("Huntsman", 120, 50, 10));
-        }
-
-        protected virtual void TakeDamage(int damage,ref int health)
-        {
-            health -= damage - Armor;
-        }
-
-        public int GetRandom()
-        {
-            Random random = new Random();
-            int minRandomChance = 1;
-            int maxRandomChance = 11;
-            int randomChance = random.Next(minRandomChance, maxRandomChance);
-            return randomChance;
-        }
-
-        public void ShowInfo()
-        {
-            Console.WriteLine($"{Name}, {Health} Здоровья, {Damage} Урона, {Armor} Брони");
-        }
-
-        public void CheckDeath(List<Warrior> list, int index,int health)
-        {
-            if (health <= 0)
-            {
-                Console.WriteLine($"{list[index - 1].Name} погиб");
-                list.RemoveAt(index-1);
-            }
         }
 
         public void CheckWin(List<Warrior> FirstWarriors, List<Warrior> SecondWarriors)
@@ -118,10 +78,54 @@ namespace ConsoleApp1
                 Console.WriteLine("Ничья");
             }
         }
+    }
+
+    class Warrior
+    {
+        private string _name;
+        public int Health { get; protected set; }
+        public int Damage { get; protected set; }
+        private int _armor;
+
+        public Warrior(string name, int health, int damage, int armor)
+        {
+            _name = name;
+            Health = health;
+            Damage = damage;
+            _armor = armor;
+        }
 
         public virtual void UseAbility()
         {
 
+        }
+
+        public int GetRandom()
+        {
+            Random random = new Random();
+            int minRandomChance = 1;
+            int maxRandomChance = 11;
+            int randomChance = random.Next(minRandomChance, maxRandomChance);
+            return randomChance;
+        }
+
+        public virtual void TakeDamage(int damage)
+        {
+            Health -= damage - _armor;
+        }
+
+        public void CheckDeath(List<Warrior> list, int index, int health)
+        {
+            if (health <= 0)
+            {
+                Console.WriteLine($"{list[index - 1]._name} погиб");
+                list.RemoveAt(index - 1);
+            }
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"{_name}, {Health} Здоровья, {Damage} Урона, {_armor} Брони");
         }
     }
 
@@ -213,7 +217,7 @@ namespace ConsoleApp1
 
         }
 
-        protected override void TakeDamage(int damage,ref int health)
+        public override void TakeDamage(int damage)
         {
             int randomChance = GetRandom();
             int firstThird = 3;
@@ -224,7 +228,7 @@ namespace ConsoleApp1
             }
             else
             {
-                base.TakeDamage(damage,ref health);
+                base.TakeDamage(damage);
             }
         }
     }
