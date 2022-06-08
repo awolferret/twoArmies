@@ -15,24 +15,33 @@ namespace ConsoleApp1
 
     class BattleField
     {
-        Warrior warrior = new Warrior("Default", 1, 1, 1);
+        private Warrior warrior = new Warrior("Default", 1, 1, 1);
+        private List<Warrior> firstWarriors = CreateSquad();
+        private List<Warrior> secondWarriors = CreateSquad();
+
+        static private List<Warrior> CreateSquad()
+        {
+            List<Warrior> list = new List<Warrior>();
+            AddToList(list);
+            return list;
+        }
+
+        static private void AddToList(List<Warrior> list)
+        {
+            list.Add(new Rogue("Rogue", 100, 50, 10));
+            list.Add(new Cliric("Cliric", 200, 40, 25));
+            list.Add(new Paladin("Paladin", 150, 45, 25));
+            list.Add(new Ninja("Ninja", 80, 55, 5));
+            list.Add(new Huntsman("Huntsman", 120, 50, 10));
+        }
 
         public void Fight()
         {
-            List<Warrior> firstWarriors = new List<Warrior>();
-            AddToList(firstWarriors);
-            List<Warrior> secondWarriors = new List<Warrior>();
-            AddToList(secondWarriors);
-            Random random = new Random();
-
-            for (int i = 0; i < firstWarriors.Count; i++)
-            {
-                Console.Write(i + 1 + " ");
-                firstWarriors[i].ShowInfo();
-            }
+            ShowFightersList(firstWarriors);
 
             while (firstWarriors.Count > 0 && secondWarriors.Count > 0)
             {
+                Random random = new Random();
                 int firstIndex = random.Next(1, firstWarriors.Count);
                 Warrior firstFighter = firstWarriors[firstIndex - 1];
                 int secondIndex = random.Next(1, secondWarriors.Count);
@@ -52,25 +61,26 @@ namespace ConsoleApp1
                     warrior.CheckDeath(secondWarriors, secondIndex, secondFighter.Health);
                 }
             }
+
             CheckWin(firstWarriors, secondWarriors);
         }
 
-        private void AddToList(List<Warrior> list)
-        {
-            list.Add(new Rogue("Rogue", 100, 50, 10));
-            list.Add(new Cliric("Cliric", 200, 40, 25));
-            list.Add(new Paladin("Paladin", 150, 45, 25));
-            list.Add(new Ninja("Ninja", 80, 55, 5));
-            list.Add(new Huntsman("Huntsman", 120, 50, 10));
+        private void ShowFightersList(List<Warrior> warriors)
+        { 
+            for (int i = 0; i < warriors.Count; i++)
+            {
+                Console.Write(i + 1 + " ");
+                warriors[i].ShowInfo();
+            }
         }
 
-        public void CheckWin(List<Warrior> FirstWarriors, List<Warrior> SecondWarriors)
+        private void CheckWin(List<Warrior> firstWarriors, List<Warrior> secondWarriors)
         {
-            if (FirstWarriors.Count <= 0)
+            if (firstWarriors.Count <= 0)
             {
                 Console.WriteLine("Победа второй команды");
             }
-            else if (SecondWarriors.Count <= 0)
+            else if (secondWarriors.Count <= 0)
             {
                 Console.WriteLine("Победа первой команды");
             }
@@ -84,9 +94,10 @@ namespace ConsoleApp1
     class Warrior
     {
         private string _name;
+        private int _armor;
         public int Health { get; protected set; }
         public int Damage { get; protected set; }
-        private int _armor;
+
 
         public Warrior(string name, int health, int damage, int armor)
         {
@@ -137,7 +148,7 @@ namespace ConsoleApp1
 
         }
 
-        public void DealDoubleDamage()
+        public override void UseAbility()
         {
             int count = 0;
             int strike = 3;
@@ -148,7 +159,6 @@ namespace ConsoleApp1
             {
                 Console.WriteLine("Разбойник нанес двойной урон");
                 Damage *= multiplayer;
-                count = 0;
             }
         }
     }
