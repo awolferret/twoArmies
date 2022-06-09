@@ -13,28 +13,10 @@ namespace ConsoleApp1
         }
     }
 
-    class BattleField
+    class BattleField : Squad
     {
         private Warrior warrior = new Warrior("Default", 1, 1, 1);
-        private List<Warrior> firstWarriors = CreateSquad();
-        private List<Warrior> secondWarriors = CreateSquad();
-
-        static private List<Warrior> CreateSquad()
-        {
-            List<Warrior> list = new List<Warrior>();
-            AddToList(list);
-            return list;
-        }
-
-        static private void AddToList(List<Warrior> list)
-        {
-            list.Add(new Rogue("Rogue", 100, 50, 10));
-            list.Add(new Cliric("Cliric", 200, 40, 25));
-            list.Add(new Paladin("Paladin", 150, 45, 25));
-            list.Add(new Ninja("Ninja", 80, 55, 5));
-            list.Add(new Huntsman("Huntsman", 120, 50, 10));
-        }
-
+        
         public void Fight()
         {
             ShowFightersList(firstWarriors);
@@ -57,8 +39,8 @@ namespace ConsoleApp1
                     secondFighter.TakeDamage(firstFighter.Damage);
                     firstFighter.ShowInfo();
                     secondFighter.ShowInfo();
-                    warrior.CheckDeath(firstWarriors, firstIndex, firstFighter.Health);
-                    warrior.CheckDeath(secondWarriors, secondIndex, secondFighter.Health);
+                    DeleteDeadFighter(firstWarriors, firstIndex);
+                    DeleteDeadFighter(secondWarriors, secondIndex);
                 }
             }
 
@@ -89,19 +71,54 @@ namespace ConsoleApp1
                 Console.WriteLine("Ничья");
             }
         }
+        private void DeleteDeadFighter(List<Warrior> list, int index)
+        {
+            if (warrior.CheckDeath(list[index - 1].Health) == true)
+            {
+                Console.WriteLine($"{list[index - 1].Name} погиб");
+                list.RemoveAt(index - 1);
+            }
+        }
+    }
+
+    class Squad
+    {
+        public List<Warrior> firstWarriors{ get; protected set; }
+        public List<Warrior> secondWarriors{ get; protected set; }
+
+        public Squad()
+        {
+            firstWarriors = CreateSquad();
+            secondWarriors = CreateSquad();
+        }
+
+        public List<Warrior> CreateSquad()
+        {
+            List<Warrior> list = new List<Warrior>();
+            AddToList(list);
+            return list;
+        }
+
+        private void AddToList(List<Warrior> list)
+        {
+            list.Add(new Rogue("Rogue", 100, 50, 10));
+            list.Add(new Cliric("Cliric", 200, 40, 25));
+            list.Add(new Paladin("Paladin", 150, 45, 25));
+            list.Add(new Ninja("Ninja", 80, 55, 5));
+            list.Add(new Huntsman("Huntsman", 120, 50, 10));
+        }
     }
 
     class Warrior
     {
-        private string _name;
-        private int _armor;
+        public string Name { get; private set; }
         public int Health { get; protected set; }
         public int Damage { get; protected set; }
-
+        private int _armor;
 
         public Warrior(string name, int health, int damage, int armor)
         {
-            _name = name;
+            Name = name;
             Health = health;
             Damage = damage;
             _armor = armor;
@@ -126,18 +143,21 @@ namespace ConsoleApp1
             Health -= damage - _armor;
         }
 
-        public void CheckDeath(List<Warrior> list, int index, int health)
+        public bool CheckDeath(int health)
         {
             if (health <= 0)
             {
-                Console.WriteLine($"{list[index - 1]._name} погиб");
-                list.RemoveAt(index - 1);
+                return true;
+            }
+            else 
+            {
+                return false;
             }
         }
 
         public void ShowInfo()
         {
-            Console.WriteLine($"{_name}, {Health} Здоровья, {Damage} Урона, {_armor} Брони");
+            Console.WriteLine($"{Name}, {Health} Здоровья, {Damage} Урона, {_armor} Брони");
         }
     }
 
