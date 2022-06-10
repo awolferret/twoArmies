@@ -85,12 +85,6 @@ namespace ConsoleApp1
 
     class Squad
     {
-        public Squad()
-        {
-            List<Warrior> firstWarriors = CreateSquad();
-            List<Warrior> secondWarriors = CreateSquad();
-        }
-
         public List<Warrior> CreateSquad()
         {
             List<Warrior> list = new List<Warrior>();
