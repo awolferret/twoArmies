@@ -13,12 +13,14 @@ namespace ConsoleApp1
         }
     }
 
-    class BattleField : Squad
-    {
-        private Warrior warrior = new Warrior("Default", 1, 1, 1);
-        
+    class BattleField 
+    {   
         public void Fight()
         {
+            Squad firstSquad = new Squad();
+            List <Warrior> firstWarriors = firstSquad.CreateSquad();
+            Squad secondSquad = new Squad();
+            List<Warrior> secondWarriors = secondSquad.CreateSquad();
             ShowFightersList(firstWarriors);
 
             while (firstWarriors.Count > 0 && secondWarriors.Count > 0)
@@ -73,7 +75,7 @@ namespace ConsoleApp1
         }
         private void DeleteDeadFighter(List<Warrior> list, int index)
         {
-            if (warrior.CheckDeath(list[index - 1].Health) == true)
+            if (list[index - 1].Health <= 0)
             {
                 Console.WriteLine($"{list[index - 1].Name} погиб");
                 list.RemoveAt(index - 1);
@@ -83,13 +85,10 @@ namespace ConsoleApp1
 
     class Squad
     {
-        public List<Warrior> firstWarriors{ get; protected set; }
-        public List<Warrior> secondWarriors{ get; protected set; }
-
         public Squad()
         {
-            firstWarriors = CreateSquad();
-            secondWarriors = CreateSquad();
+            List<Warrior> firstWarriors = CreateSquad();
+            List<Warrior> secondWarriors = CreateSquad();
         }
 
         public List<Warrior> CreateSquad()
@@ -141,18 +140,6 @@ namespace ConsoleApp1
         public virtual void TakeDamage(int damage)
         {
             Health -= damage - _armor;
-        }
-
-        public bool CheckDeath(int health)
-        {
-            if (health <= 0)
-            {
-                return true;
-            }
-            else 
-            {
-                return false;
-            }
         }
 
         public void ShowInfo()
